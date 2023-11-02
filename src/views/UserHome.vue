@@ -2,7 +2,7 @@
 import { getStickersApi } from '@/api/api'
 import type { ValidateErrorEntity } from 'ant-design-vue/es/form/interface'
 import { onMounted, reactive, ref, toRaw } from 'vue'
-import { writeStickerApi } from '@/api/api'
+import { writeStickerApi,getStickersByKind } from '@/api/api'
 const categories = ['全部', '留言', '目标', '理想', '爱情']
 
 const items = ref<any>([])
@@ -63,7 +63,8 @@ const onSubmit = () => {
       )
 
       writeVisible.value = false
-      getAllItems()
+      await fetchItems(nowKind.value)
+
       form.content = ''
       form.bgColor = ''
       form.sender = ''
@@ -72,6 +73,24 @@ const onSubmit = () => {
     .catch((error: ValidateErrorEntity) => {
       alert('输入不完整')
     })
+}
+
+const nowKind = ref('')
+async function fetchItems(kind:string){
+  if(kind === "全部"){
+    getAllItems()
+  }
+  else{
+    const data = await getStickersByKind(kind)
+    items.value = data
+  }
+  nowKind.value = kind
+ 
+}
+
+function changeCategry(category:string){
+  currentCategory.value = category
+  fetchItems(category)
 }
 </script>
 
@@ -85,7 +104,7 @@ const onSubmit = () => {
         <span
           v-for="category in categories"
           :key="category"
-          @click="currentCategory = category"
+          @click="changeCategry(category)"
           class="px-2 py-1 rounded-xl cursor-pointer"
           :style="{
             border: currentCategory === category ? '1px solid black' : 'none',

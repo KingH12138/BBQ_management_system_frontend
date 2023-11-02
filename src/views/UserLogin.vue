@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { loginApi } from '@/api/api'
+import { useRouter } from 'vue-router';
 interface FormState {
   username: string
   password: string
@@ -10,9 +11,10 @@ const formState = reactive<FormState>({
   username: '',
   password: ''
 })
-
+const router = useRouter()
 const onFinish = async (values: any) => {
   const d = await loginApi(values.username, values.password)
+   router.push("/manage")
   console.log('Success:', values, d)
 }
 

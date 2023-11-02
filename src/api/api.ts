@@ -38,3 +38,26 @@ export async function writeStickerApi(
   })
   return data
 }
+
+
+export async function getStickersByKind(kind:string){
+  const  data  = await instance.post('/SearchByKind', {
+    kind
+  })
+  
+  return data
+}
+
+export async function getStickersByName(name:string) {
+  const data = await instance.post('/SearchBySender',{
+    sender:name
+  })
+  return data  
+}
+
+export async function deleteStickerById(id:string) {
+  const data =await instance.post("/DeleteById",{
+    id
+  })
+  return data
+}
